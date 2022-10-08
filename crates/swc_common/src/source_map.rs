@@ -1234,6 +1234,7 @@ impl SourceMap {
         // mappings.sort_by_key(|v| v.0);
 
         let mut cur_file: Option<Lrc<SourceFile>> = None;
+        let mut source_root = None;
 
         let mut prev_dst_line = u32::MAX;
 
@@ -1282,6 +1283,16 @@ impl SourceMap {
             };
             if config.skip(&f.name) {
                 continue;
+            }
+
+            if source_root.is_none() {
+                if let FileName::Real(f) = &f.name {
+                    if let Some(parent) = f.parent() {
+                        let s = parent.display().to_string();
+                        builder.set_source_root(Some(&s));
+                        source_root = Some(s);
+                    }
+                }
             }
 
             let emit_columns = config.emit_columns(&f.name);
