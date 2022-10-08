@@ -15,6 +15,7 @@
     "customElements",
     "define"
   ],
+  "sourceRoot": "$DIR/tests/fixture/issues-4xxx/4006/1/input",
   "sources": [
     "../../input/index.ts"
   ],

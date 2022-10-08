@@ -51,6 +51,7 @@
     "$pull",
     "name"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/012/input",
   "sources": [
     "../../input/CommentService.ts"
   ],

@@ -4,6 +4,7 @@
     "a",
     "b"
   ],
+  "sourceRoot": "$DIR/tests/fixture/issues-4xxx/4120/1/input",
   "sources": [
     "../../input/index.js"
   ],

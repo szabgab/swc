@@ -45,6 +45,7 @@
     "variant",
     "constructor"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/issue-3854/1-true/input",
   "sources": [
     "../../input/index.ts"
   ],

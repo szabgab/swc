@@ -27,6 +27,7 @@
     "isSharp",
     "toBeLessThan"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/006/input",
   "sources": [
     "../../input/index.js"
   ],

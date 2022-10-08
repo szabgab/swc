@@ -29,6 +29,7 @@
     "deleteComment",
     "delete"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/011/input",
   "sources": [
     "../../input/CommentControlller.ts"
   ],

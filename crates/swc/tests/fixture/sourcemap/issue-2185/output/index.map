@@ -7,6 +7,7 @@
     "toBe",
     "str"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/issue-2185/input",
   "sources": [
     "../../input/index.js"
   ],

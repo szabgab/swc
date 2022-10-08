@@ -48,6 +48,7 @@
     "createPostComment",
     "createCommentDto"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/013/input",
   "sources": [
     "../../input/PistController.ts"
   ],

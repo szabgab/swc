@@ -3,6 +3,7 @@
   "names": [
     "test"
   ],
+  "sourceRoot": "$DIR/tests/fixture/issues-4xxx/4870/1/input",
   "sources": [
     "../../input/index.js"
   ],

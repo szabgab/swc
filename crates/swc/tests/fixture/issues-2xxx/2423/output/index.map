@@ -7,6 +7,7 @@
     "console",
     "log"
   ],
+  "sourceRoot": "$DIR/tests/fixture/issues-2xxx/2423/input",
   "sources": [
     "../../input/index.ts"
   ],

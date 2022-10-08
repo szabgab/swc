@@ -6,6 +6,7 @@
     "Error",
     "stack"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/009/input",
   "sources": [
     "../../input/index.js"
   ],

@@ -8,6 +8,7 @@
     "getStaticProps",
     "props"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/003/input",
   "sources": [
     "../../input/index.js"
   ],

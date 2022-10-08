@@ -4,6 +4,7 @@
     "foo",
     "arr"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/001/input",
   "sources": [
     "../../input/index.ts"
   ],

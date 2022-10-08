@@ -6,6 +6,7 @@
     "expect",
     "toBe"
   ],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/008/input",
   "sources": [
     "../../input/index.js"
   ],

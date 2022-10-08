@@ -6,6 +6,7 @@
     "x",
     "Error"
   ],
+  "sourceRoot": "$DIR/tests/fixture/deno/deno-10014/case1/input",
   "sources": [
     "../../input/index.ts"
   ],

@@ -8,6 +8,7 @@
     "resolve",
     "setTimeout"
   ],
+  "sourceRoot": "$DIR/tests/fixture/issues-3xxx/3782/input",
   "sources": [
     "../../input/index.ts"
   ],

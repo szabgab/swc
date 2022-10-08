@@ -1,6 +1,7 @@
 {
   "mappings": "AAAA,cAAc,iBAAiB;AAC/B,cAAc,wBAAwB;AAEtC,cAAc,WAAW;AACzB,cAAc,eAAe",
   "names": [],
+  "sourceRoot": "$DIR/tests/fixture/sourcemap/010/input",
   "sources": [
     "../../input/index.ts"
   ],

@@ -4,6 +4,7 @@
     "console",
     "log"
   ],
+  "sourceRoot": "$DIR/tests/fixture/issues-4xxx/4876/input",
   "sources": [
     "../../input/index.js"
   ],
