@@ -8,14 +8,14 @@ use std::{
 
 use num_bigint::BigInt as BigIntValue;
 use swc_atoms::{js_word, Atom, JsWord};
-use swc_common::{Span, Spanned};
+use swc_common::{BytePos, Span, Spanned};
 pub(crate) use swc_ecma_ast::AssignOp as AssignOpToken;
 use swc_ecma_ast::BinaryOp;
 
 pub(crate) use self::{AssignOpToken::*, BinOpToken::*, Keyword::*, Token::*};
 use crate::{error::Error, lexer::LexResult};
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TokenKind {
     Word,
     Arrow,
@@ -278,10 +278,11 @@ impl BinOpToken {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenAndSpan {
-    pub token: Token,
+    pub token: TokenKind,
     /// Had a line break before this token?
     pub had_line_break: bool,
-    pub span: Span,
+    pub span_lo: BytePos,
+    pub span_hi: BytePos,
 }
 
 impl Spanned for TokenAndSpan {
