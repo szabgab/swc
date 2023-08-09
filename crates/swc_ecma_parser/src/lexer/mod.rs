@@ -1039,7 +1039,7 @@ impl<'a> Lexer<'a> {
     }
 
     /// Expects current char to be '/'
-    fn read_regexp(&mut self, start: BytePos) -> LexResult<Token> {
+    fn read_regexp(&mut self, start: BytePos) -> LexResult<TokenKind> {
         self.input.reset_to(start);
 
         debug_assert_eq!(self.cur(), Some('/'));
@@ -1108,7 +1108,7 @@ impl<'a> Lexer<'a> {
         .map(|(value, _)| value)
         .unwrap_or_default();
 
-        Ok(Regex(content, flags))
+        Ok(TokenKind::Regex)
     }
 
     fn read_shebang(&mut self) -> LexResult<Option<Atom>> {
