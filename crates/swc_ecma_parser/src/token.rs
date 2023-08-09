@@ -15,6 +15,47 @@ use swc_ecma_ast::BinaryOp;
 pub(crate) use self::{AssignOpToken::*, BinOpToken::*, Keyword::*, Token::*};
 use crate::{error::Error, lexer::LexResult};
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum TokenKind {
+    Word,
+    Arrow,
+    Hash,
+    At,
+    Dot,
+    DotDotDot,
+    Bang,
+    LParen,
+    RParen,
+    LBracket,
+    RBracket,
+    LBrace,
+    RBrace,
+    Semi,
+    Comma,
+    BackQuote,
+    Template,
+    Colon,
+    BinOp(BinOpToken),
+    AssignOp(AssignOpToken),
+    DollarLBrace,
+    QuestionMark,
+    PlusPlus,
+    MinusMinus,
+    Tilde,
+    String,
+    Regex,
+    Num,
+    BigInt,
+
+    JSXName,
+    JSXText,
+    JSXTagStart,
+    JSXTagEnd,
+
+    Shebang,
+    Error,
+}
+
 #[derive(Clone, PartialEq)]
 pub enum Token {
     /// Identifier, "null", "true", "false".
