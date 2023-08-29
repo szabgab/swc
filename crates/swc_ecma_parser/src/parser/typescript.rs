@@ -8,7 +8,7 @@ use super::*;
 use crate::{
     lexer::TokenContexts,
     parser::class_and_fn::IsSimpleParameterList,
-    token::{Keyword, TokenKind},
+    token::{Keyword, TokenKind, WordKind},
 };
 
 impl<I: Tokens> Parser<I> {
@@ -39,9 +39,9 @@ impl<I: Tokens> Parser<I> {
         }
 
         let pos = {
-            let modifier = match *cur!(self, true)? {
-                Token::Word(ref w @ Word::Ident(..))
-                | Token::Word(ref w @ Word::Keyword(Keyword::In | Keyword::Const)) => w.cow(),
+            let modifier = match cur!(self, true)? {
+                TokenKind::Word(WordKind::Ident)
+                | TokenKind::Word(WordKind::Keyword(Keyword::In | Keyword::Const)) => w.cow(),
 
                 _ => return Ok(None),
             };
@@ -140,7 +140,7 @@ impl<I: Tokens> Parser<I> {
             }
 
             if kind == ParsingContext::EnumMembers {
-                const TOKEN: &Token = &Token::Comma;
+                const TOKEN: TokenKind = TokenKind::Comma;
                 let cur = match cur!(self, false).ok() {
                     Some(tok) => format!("{:?}", tok),
                     None => "EOF".to_string(),
