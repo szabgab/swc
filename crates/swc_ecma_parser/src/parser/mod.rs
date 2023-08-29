@@ -12,7 +12,7 @@ use self::{input::Buffer, util::ParseObject};
 use crate::{
     error::SyntaxError,
     lexer::Lexer,
-    token::{Token, Word},
+    token::{Token, TokenKind, Word},
     Context, EsVersion, Syntax, TsConfig,
 };
 #[cfg(test)]
