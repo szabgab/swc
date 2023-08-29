@@ -2127,9 +2127,9 @@ impl<I: Tokens> Parser<I> {
                     }
                 }
             }
-            Token::BigInt { .. }
-            | Token::Str { .. }
-            | Token::Num { .. }
+            TokenKind::BigInt
+            | TokenKind::Str
+            | TokenKind::Num
             | tok!("true")
             | tok!("false")
             | tok!('`') => {
