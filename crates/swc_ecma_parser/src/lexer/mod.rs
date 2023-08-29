@@ -107,24 +107,32 @@ impl FusedIterator for CharIter {}
 
 #[derive(Clone)]
 pub struct Lexer<'a> {
+    input: StringInput<'a>,
+
+    state: State,
+
+    pub(crate) ctx: Context,
+
+    token_text: smartstring::SmartString<smartstring::LazyCompact>,
+
+    atoms: Rc<RefCell<AtomGenerator>>,
+
+    start_pos: BytePos,
+
+    pub(crate) syntax: Syntax,
+
+    buf: Rc<RefCell<String>>,
+
     comments: Option<&'a dyn Comments>,
     /// [Some] if comment comment parsing is enabled. Otherwise [None]
     comments_buffer: Option<CommentsBuffer>,
 
-    pub(crate) ctx: Context,
-    input: StringInput<'a>,
-    start_pos: BytePos,
-
-    state: State,
-    pub(crate) syntax: Syntax,
     pub(crate) target: EsVersion,
 
     errors: Rc<RefCell<Vec<Error>>>,
     module_errors: Rc<RefCell<Vec<Error>>>,
 
-    atoms: Rc<RefCell<AtomGenerator>>,
-
-    buf: Rc<RefCell<String>>,
+    token_raw: String,
 }
 
 impl FusedIterator for Lexer<'_> {}
@@ -167,7 +175,7 @@ impl<'a> Lexer<'a> {
     }
 
     /// babel: `getTokenFromCode`
-    fn read_token(&mut self) -> LexResult<Option<Token>> {
+    fn read_token(&mut self) -> LexResult<Option<TokenKind>> {
         let byte = match self.input.as_str().as_bytes().first() {
             Some(&v) => v,
             None => return Ok(None),
