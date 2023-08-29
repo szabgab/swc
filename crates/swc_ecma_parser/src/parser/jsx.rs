@@ -89,11 +89,11 @@ impl<I: Tokens> Parser<I> {
                     JSXExpr::Expr(..) => Ok(node.into()),
                 }
             }
-            Token::Str { .. } => {
+            TokenKind::Str => {
                 let lit = self.parse_lit()?;
                 Ok(JSXAttrValue::Lit(lit))
             }
-            Token::JSXTagStart => {
+            TokenKind::JSXTagStart => {
                 let expr = self.parse_jsx_element()?;
                 match expr {
                     Either::Left(n) => Ok(JSXAttrValue::JSXFragment(n)),

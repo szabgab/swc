@@ -6,7 +6,7 @@ use super::{pat::PatType, util::ExprExt, *};
 use crate::{
     lexer::TokenContext,
     parser::class_and_fn::IsSimpleParameterList,
-    token::{AssignOpToken, TokenKind},
+    token::{AssignOpToken, TokenKind, WordKind},
 };
 
 mod ops;
@@ -135,7 +135,7 @@ impl<I: Tokens> Parser<I> {
         }
 
         self.state.potential_arrow_start = match *cur!(self, true)? {
-            TokenKind::Word(Word::Ident(..)) | tok!('(') | tok!("yield") => Some(cur_pos!(self)),
+            TokenKind::Word(WordKind::Ident) | tok!('(') | tok!("yield") => Some(cur_pos!(self)),
             _ => None,
         };
 
