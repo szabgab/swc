@@ -650,17 +650,17 @@ impl From<BinOpToken> for BinaryOp {
     }
 }
 
-impl Token {
+impl TokenKind {
     /// Returns true if `self` can follow keyword let.
     ///
     /// e.g. `let a = xx;`, `let {a:{}} = 1`
     pub(crate) fn follows_keyword_let(&self, _strict: bool) -> bool {
         matches!(
             *self,
-            crate::token::Token::Word(crate::token::Word::Keyword(crate::token::Keyword::Let))
+            Self::Word(crate::token::WordKind::Keyword(crate::token::Keyword::Let))
                 | tok!('{')
                 | tok!('[')
-                | Word(Word::Ident(..))
+                | Self::Word(WordKind::Ident)
                 | tok!("yield")
                 | tok!("await")
         )
