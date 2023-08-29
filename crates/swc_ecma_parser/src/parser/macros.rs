@@ -227,7 +227,7 @@ macro_rules! expect_exact {
 
 macro_rules! store {
     ($p:expr, $t:tt) => {{
-        const TOKEN: crate::token::Token = token_including_semi!($t);
+        const TOKEN: crate::token::TokenKind = token_including_semi!($t);
 
         $p.input.store(TOKEN);
     }};

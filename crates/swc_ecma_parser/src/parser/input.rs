@@ -295,6 +295,19 @@ impl<I: Tokens> Buffer<I> {
         }
     }
 
+    pub fn store(&mut self, token: TokenKind) {
+        debug_assert!(self.next.is_none());
+        debug_assert!(self.cur.is_none());
+        let span = self.prev_span;
+
+        self.cur = Some(TokenAndSpan {
+            span_lo: span.lo,
+            span_hi: span.hi,
+            token,
+            had_line_break: false,
+        });
+    }
+
     #[inline(never)]
     fn bump_inner(&mut self) {
         let prev = self.cur.take();
