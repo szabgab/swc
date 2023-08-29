@@ -856,7 +856,7 @@ impl<I: Tokens> Parser<I> {
         let body = self.parse_block_body(
             /* directives */ false,
             /* topLevel */ true,
-            /* end */ Some(&tok!('}')),
+            /* end */ Some(tok!('}')),
         )?;
 
         Ok(TsModuleBlock {

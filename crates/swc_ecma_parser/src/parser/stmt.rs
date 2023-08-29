@@ -443,7 +443,7 @@ impl<'a, I: Tokens> Parser<I> {
                 expr,
             }))
         } else {
-            if let Token::BinOp(..) = *cur!(self, false)? {
+            if let TokenKind::BinOp(..) = cur!(self, false)? {
                 self.emit_err(self.input.cur_span(), SyntaxError::TS1005);
                 let expr = self.parse_bin_op_recursively(expr, 0)?;
                 return Ok(ExprStmt {
