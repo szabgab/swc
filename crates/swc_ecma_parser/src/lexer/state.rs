@@ -291,7 +291,7 @@ impl<'a> Iterator for Lexer<'a> {
 
                         if c == '>' {
                             self.input.bump();
-                            return Ok(Some(Token::JSXTagEnd));
+                            return Ok(Some(TokenKind::JSXTagEnd));
                         }
 
                         if (c == '\'' || c == '"')

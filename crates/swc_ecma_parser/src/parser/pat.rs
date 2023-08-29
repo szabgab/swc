@@ -50,7 +50,7 @@ impl<I: Tokens> Parser<I> {
         trace_cur!(self, parse_binding_pat_or_ident);
 
         match *cur!(self, true)? {
-            tok!("yield") | TokenKind::Word => self.parse_binding_ident().map(Pat::from),
+            tok!("yield") | TokenKind::Word(..) => self.parse_binding_ident().map(Pat::from),
             tok!('[') => self.parse_array_binding_pat(),
             tok!('{') => self.parse_object(),
             // tok!('(') => {
