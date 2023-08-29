@@ -208,7 +208,7 @@ impl<'a> Iterator for Lexer<'a> {
 
             if self.state.is_first {
                 if let Some(shebang) = self.read_shebang()? {
-                    return Ok(Some(Token::Shebang(shebang)));
+                    return Ok(Some(TokenKind::Shebang(shebang)));
                 }
             }
 

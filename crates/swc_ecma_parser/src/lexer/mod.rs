@@ -237,7 +237,7 @@ impl<'a> Lexer<'a> {
     ///
     /// This is extracted as a method to reduce size of `read_token`.
     #[inline(never)]
-    fn read_token_dot(&mut self) -> LexResult<Token> {
+    fn read_token_dot(&mut self) -> LexResult<TokenKind> {
         // Check for eof
         let next = match self.input.peek() {
             Some(next) => next,
@@ -269,7 +269,7 @@ impl<'a> Lexer<'a> {
     ///
     /// This is extracted as a method to reduce size of `read_token`.
     #[inline(never)]
-    fn read_token_question_mark(&mut self) -> LexResult<Token> {
+    fn read_token_question_mark(&mut self) -> LexResult<TokenKind> {
         match self.input.peek() {
             Some('?') => {
                 self.input.bump();
@@ -291,7 +291,7 @@ impl<'a> Lexer<'a> {
     ///
     /// This is extracted as a method to reduce size of `read_token`.
     #[inline(never)]
-    fn read_token_colon(&mut self) -> LexResult<Token> {
+    fn read_token_colon(&mut self) -> LexResult<TokenKind> {
         self.input.bump();
         Ok(tok!(':'))
     }
@@ -300,7 +300,7 @@ impl<'a> Lexer<'a> {
     ///
     /// This is extracted as a method to reduce size of `read_token`.
     #[inline(never)]
-    fn read_token_zero(&mut self) -> LexResult<Token> {
+    fn read_token_zero(&mut self) -> LexResult<TokenKind> {
         let next = self.input.peek();
 
         let bigint = match next {
@@ -325,7 +325,7 @@ impl<'a> Lexer<'a> {
     ///
     /// This is extracted as a method to reduce size of `read_token`.
     #[inline(never)]
-    fn read_token_logical(&mut self, c: u8) -> LexResult<Token> {
+    fn read_token_logical(&mut self, c: u8) -> LexResult<TokenKind> {
         let had_line_break_before_last = self.had_line_break_before_last();
         let start = self.cur_pos();
 
@@ -378,7 +378,7 @@ impl<'a> Lexer<'a> {
     ///
     /// This is extracted as a method to reduce size of `read_token`.
     #[inline(never)]
-    fn read_token_mul_mod(&mut self, c: u8) -> LexResult<Token> {
+    fn read_token_mul_mod(&mut self, c: u8) -> LexResult<TokenKind> {
         let is_mul = c == b'*';
         self.input.bump();
         let mut token = if is_mul { BinOp(Mul) } else { BinOp(Mod) };
@@ -709,7 +709,7 @@ impl<'a> Lexer<'a> {
     }
 
     /// See https://tc39.github.io/ecma262/#sec-names-and-keywords
-    fn read_ident_or_keyword(&mut self) -> LexResult<Token> {
+    fn read_ident_or_keyword(&mut self) -> LexResult<TokenKind> {
         debug_assert!(self.cur().is_some());
         let start = self.cur_pos();
 
@@ -979,7 +979,7 @@ impl<'a> Lexer<'a> {
     }
 
     /// See https://tc39.github.io/ecma262/#sec-literals-string-literals
-    fn read_str_lit(&mut self) -> LexResult<Token> {
+    fn read_str_lit(&mut self) -> LexResult<TokenKind> {
         debug_assert!(self.cur() == Some('\'') || self.cur() == Some('"'));
         let start = self.cur_pos();
         let mut raw = String::new();
@@ -1131,7 +1131,7 @@ impl<'a> Lexer<'a> {
         Ok(Some(Atom::new(s)))
     }
 
-    fn read_tmpl_token(&mut self, start_of_tpl: BytePos) -> LexResult<Token> {
+    fn read_tmpl_token(&mut self, start_of_tpl: BytePos) -> LexResult<TokenKind> {
         let start = self.cur_pos();
 
         let mut cooked = Ok(String::new());
