@@ -206,10 +206,10 @@ impl TokenKind {
             | Self::PlusPlus
             | Self::MinusMinus
             | Self::Tilde
-            | Self::Str { .. }
-            | Self::Regex(..)
-            | Self::Num { .. }
-            | Self::BigInt { .. }
+            | Self::Str
+            | Self::Regex
+            | Self::Num
+            | Self::BigInt
             | Self::JSXTagStart => true,
             _ => false,
         }
