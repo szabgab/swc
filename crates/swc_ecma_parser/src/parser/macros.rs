@@ -165,7 +165,7 @@ macro_rules! eat {
             tracing::trace!("eat(';'): cur={:?}", cur!($p, false));
         }
         match $p.input.cur() {
-            Some(&TokenKind::Semi) => {
+            Some(&crate::token::TokenKind::Semi) => {
                 $p.input.bump();
                 true
             }
@@ -207,7 +207,7 @@ macro_rules! is_exact {
 /// This handles automatic semicolon insertion.
 macro_rules! expect {
     ($p:expr, $t:tt) => {{
-        const TOKEN: &Token = &token_including_semi!($t);
+        const TOKEN: &crate::token::TokenKind = &token_including_semi!($t);
         if !eat!($p, $t) {
             let cur = $p.input.dump_cur();
             syntax_error!($p, $p.input.cur_span(), SyntaxError::Expected(TOKEN, cur))
@@ -217,7 +217,7 @@ macro_rules! expect {
 
 macro_rules! expect_exact {
     ($p:expr, $t:tt) => {{
-        const TOKEN: &Token = &token_including_semi!($t);
+        const TOKEN: &crate::token::TokenKind = &token_including_semi!($t);
         if !eat_exact!($p, $t) {
             let cur = $p.input.dump_cur();
             syntax_error!($p, $p.input.cur_span(), SyntaxError::Expected(TOKEN, cur))
@@ -227,7 +227,7 @@ macro_rules! expect_exact {
 
 macro_rules! store {
     ($p:expr, $t:tt) => {{
-        const TOKEN: Token = token_including_semi!($t);
+        const TOKEN: crate::token::Token = token_including_semi!($t);
 
         $p.input.store(TOKEN);
     }};
@@ -239,7 +239,7 @@ macro_rules! cur {
         let pos = $p.input.last_pos();
         let last = Span::new(pos, pos, Default::default());
         let is_err_token = match $p.input.cur() {
-            Some(&$crate::token::Token::Error(..)) => true,
+            Some(&$crate::token::TokenKind::Error) => true,
             _ => false,
         };
         if is_err_token {

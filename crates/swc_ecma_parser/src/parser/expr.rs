@@ -4,7 +4,9 @@ use swc_common::{ast_node, collections::AHashMap, util::take::Take, Spanned};
 
 use super::{pat::PatType, util::ExprExt, *};
 use crate::{
-    lexer::TokenContext, parser::class_and_fn::IsSimpleParameterList, token::AssignOpToken,
+    lexer::TokenContext,
+    parser::class_and_fn::IsSimpleParameterList,
+    token::{AssignOpToken, TokenKind},
 };
 
 mod ops;
@@ -133,7 +135,7 @@ impl<I: Tokens> Parser<I> {
         }
 
         self.state.potential_arrow_start = match *cur!(self, true)? {
-            Word(Word::Ident(..)) | tok!('(') | tok!("yield") => Some(cur_pos!(self)),
+            TokenKind::Word(Word::Ident(..)) | tok!('(') | tok!("yield") => Some(cur_pos!(self)),
             _ => None,
         };
 
@@ -158,7 +160,7 @@ impl<I: Tokens> Parser<I> {
         trace_cur!(self, finish_assignment_expr);
 
         match cur!(self, false) {
-            Ok(&Token::AssignOp(op)) => {
+            Ok(&TokenKind::AssignOp(op)) => {
                 let left = if op == AssignOpToken::Assign {
                     self.reparse_expr_as_pat(PatType::AssignPat, cond)
                         .map(Box::new)
@@ -327,9 +329,9 @@ impl<I: Tokens> Parser<I> {
                 tok!("null")
                 | tok!("true")
                 | tok!("false")
-                | Token::Num { .. }
-                | Token::BigInt { .. }
-                | Token::Str { .. } => {
+                | TokenKind::Num
+                | TokenKind::BigInt
+                | TokenKind::Str => {
                     return Ok(Box::new(Expr::Lit(self.parse_lit()?)));
                 }
 
@@ -339,7 +341,7 @@ impl<I: Tokens> Parser<I> {
 
                     self.input.set_next_regexp(Some(start));
 
-                    if let Some(Token::Regex(..)) = self.input.cur() {
+                    if let Some(TokenKind::Regex) = self.input.cur() {
                         self.input.set_next_regexp(None);
 
                         match bump!(self) {
