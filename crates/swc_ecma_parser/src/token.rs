@@ -53,7 +53,7 @@ pub enum TokenKind {
     PlusPlus,
     MinusMinus,
     Tilde,
-    String,
+    Str,
     Regex,
     Num,
     BigInt,
