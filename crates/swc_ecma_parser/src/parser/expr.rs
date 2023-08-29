@@ -2071,7 +2071,7 @@ impl<I: Tokens> Parser<I> {
 
                 Lit::Bool(Bool { span, value })
             }
-            Token::Str { .. } => match bump!(self) {
+            TokenKind::Str => match bump!(self) {
                 Token::Str { value, raw } => Lit::Str(Str {
                     span: span!(self, start),
                     value,

@@ -106,7 +106,7 @@ impl<'a> From<&'a Token> for TokenType {
                 can_have_trailing_comment: matches!(
                     *t,
                     Token::Num { .. }
-                        | Token::Str { .. }
+                        | TokenKind::Str
                         | Token::Word(Word::Ident(..))
                         | Token::DollarLBrace
                         | Token::Regex(..)

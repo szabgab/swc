@@ -307,7 +307,7 @@ impl<I: Tokens> Parser<I> {
         let arg_span = self.input.cur_span();
 
         let arg = match cur!(self, true)? {
-            Token::Str { .. } => match bump!(self) {
+            TokenKind::Str => match bump!(self) {
                 Token::Str { value, raw } => Str {
                     span: arg_span,
                     value,
@@ -758,7 +758,7 @@ impl<I: Tokens> Parser<I> {
         // Computed property names are grammar errors in an enum, so accept just string
         // literal or identifier.
         let id = match *cur!(self, true)? {
-            Token::Str { .. } => self.parse_lit().map(|lit| match lit {
+            TokenKind::Str => self.parse_lit().map(|lit| match lit {
                 Lit::Str(s) => TsEnumMemberId::Str(s),
                 _ => unreachable!(),
             })?,
@@ -904,7 +904,7 @@ impl<I: Tokens> Parser<I> {
         let (global, id) = if is!(self, "global") {
             let id = self.parse_ident_name()?;
             (true, TsModuleName::Ident(id))
-        } else if matches!(*cur!(self, true)?, Token::Str { .. }) {
+        } else if matches!(*cur!(self, true)?, TokenKind::Str) {
             let id = self.parse_lit().map(|lit| match lit {
                 Lit::Str(s) => TsModuleName::Str(s),
                 _ => unreachable!(),
@@ -1217,7 +1217,7 @@ impl<I: Tokens> Parser<I> {
         expect!(self, "require");
         expect!(self, '(');
         match *cur!(self, true)? {
-            Token::Str { .. } => {}
+            TokenKind::Str => {}
             _ => unexpected!(self, "a string literal"),
         }
         let expr = match self.parse_lit()? {
@@ -1421,7 +1421,7 @@ impl<I: Tokens> Parser<I> {
             self.with_ctx(ctx).parse_with(|p| {
                 // We check if it's valid for it to be a private name when we push it.
                 let key = match *cur!(p, true)? {
-                    Token::Num { .. } | Token::Str { .. } => p.parse_new_expr(),
+                    Token::Num { .. } | TokenKind::Str => p.parse_new_expr(),
                     _ => p.parse_maybe_private_name().map(|e| match e {
                         Either::Left(e) => {
                             p.emit_err(e.span(), SyntaxError::PrivateNameInInterface);
@@ -2598,7 +2598,7 @@ impl<I: Tokens> Parser<I> {
                     bump!(self);
                 }
 
-                if matches!(*cur!(self, true)?, Token::Str { .. }) {
+                if matches!(*cur!(self, true)?, TokenKind::Str) {
                     return self
                         .parse_ts_ambient_external_module_decl(start)
                         .map(From::from)
