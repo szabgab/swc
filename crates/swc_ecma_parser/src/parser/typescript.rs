@@ -1216,7 +1216,7 @@ impl<I: Tokens> Parser<I> {
         let start = cur_pos!(self);
         expect!(self, "require");
         expect!(self, '(');
-        match *cur!(self, true)? {
+        match cur!(self, true)? {
             TokenKind::Str => {}
             _ => unexpected!(self, "a string literal"),
         }
@@ -1319,7 +1319,7 @@ impl<I: Tokens> Parser<I> {
         expect!(self, '(');
         let params = self.parse_ts_binding_list_for_signature()?;
         let type_ann = if is!(self, ':') {
-            Some(self.parse_ts_type_or_type_predicate_ann(&tok!(':'))?)
+            Some(self.parse_ts_type_or_type_predicate_ann(tok!(':'))?)
         } else {
             None
         };
@@ -1420,7 +1420,7 @@ impl<I: Tokens> Parser<I> {
             };
             self.with_ctx(ctx).parse_with(|p| {
                 // We check if it's valid for it to be a private name when we push it.
-                let key = match *cur!(p, true)? {
+                let key = match cur!(p, true)? {
                     Token::Num { .. } | TokenKind::Str => p.parse_new_expr(),
                     _ => p.parse_maybe_private_name().map(|e| match e {
                         Either::Left(e) => {
@@ -1456,7 +1456,7 @@ impl<I: Tokens> Parser<I> {
             expect!(self, '(');
             let params = self.parse_ts_binding_list_for_signature()?;
             let type_ann = if is!(self, ':') {
-                self.parse_ts_type_or_type_predicate_ann(&tok!(':'))
+                self.parse_ts_type_or_type_predicate_ann(tok!(':'))
                     .map(Some)?
             } else {
                 None
@@ -1645,7 +1645,7 @@ impl<I: Tokens> Parser<I> {
 
         let start = cur_pos!(self);
         let name = self.parse_ident_name()?;
-        let constraint = Some(self.expect_then_parse_ts_type(&tok!("in"), "in")?);
+        let constraint = Some(self.expect_then_parse_ts_type(tok!("in"), "in")?);
 
         Ok(TsTypeParam {
             span: span!(self, start),
@@ -1870,7 +1870,7 @@ impl<I: Tokens> Parser<I> {
         expect!(self, '(');
         let params = self.parse_ts_binding_list_for_signature()?;
         trace_cur!(self, parse_ts_fn_or_constructor_type__after_params);
-        let type_ann = self.parse_ts_type_or_type_predicate_ann(&tok!("=>"))?;
+        let type_ann = self.parse_ts_type_or_type_predicate_ann(tok!("=>"))?;
         trace_cur!(self, parse_ts_fn_or_constructor_type__after_type_ann);
         // ----- end
 
@@ -2002,7 +2002,7 @@ impl<I: Tokens> Parser<I> {
         }
 
         if is!(self, ':') {
-            self.parse_ts_type_or_type_predicate_ann(&tok!(':'))
+            self.parse_ts_type_or_type_predicate_ann(tok!(':'))
                 .map(Some)
         } else {
             Ok(None)
@@ -2030,7 +2030,7 @@ impl<I: Tokens> Parser<I> {
             return Ok(None);
         }
 
-        self.eat_then_parse_ts_type(&tok!(':'))
+        self.eat_then_parse_ts_type(tok!(':'))
     }
 
     /// `tsTryParseTypeParameters`
@@ -2063,7 +2063,7 @@ impl<I: Tokens> Parser<I> {
 
         let start = cur_pos!(self);
 
-        match *cur!(self, true)? {
+        match cur!(self, true)? {
             Token::Word(Word::Ident(..))
             | tok!("void")
             | tok!("yield")
@@ -2140,7 +2140,7 @@ impl<I: Tokens> Parser<I> {
 
                 bump!(self);
 
-                if !matches!(*cur!(self, true)?, Token::Num { .. } | Token::BigInt { .. }) {
+                if !matches!(cur!(self, true)?, TokenKind::Num | TokenKind::BigInt) {
                     unexpected!(self, "numeric literal or bigint literal")
                 }
 
@@ -2510,7 +2510,7 @@ impl<I: Tokens> Parser<I> {
                     .map(make_decl_declare)
                     .map(Some);
             } else if is!(p, IdentName) {
-                let value = match *cur!(p, true)? {
+                let value = match cur!(p, true)? {
                     Token::Word(ref w) => w.clone().into(),
                     _ => unreachable!(),
                 };
@@ -2598,7 +2598,7 @@ impl<I: Tokens> Parser<I> {
                     bump!(self);
                 }
 
-                if matches!(*cur!(self, true)?, TokenKind::Str) {
+                if matches!(cur!(self, true)?, TokenKind::Str) {
                     return self
                         .parse_ts_ambient_external_module_decl(start)
                         .map(From::from)
@@ -2734,7 +2734,7 @@ impl<I: Tokens> Parser<I> {
         self.parse_ts_union_or_intersection_type(
             UnionOrIntersection::Intersection,
             |p| p.parse_ts_type_operator_or_higher(),
-            &tok!('&'),
+            tok!('&'),
         )
     }
 
@@ -2746,7 +2746,7 @@ impl<I: Tokens> Parser<I> {
         self.parse_ts_union_or_intersection_type(
             UnionOrIntersection::Union,
             |p| p.parse_ts_intersection_type_or_higher(),
-            &tok!('|'),
+            tok!('|'),
         )
     }
 
