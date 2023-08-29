@@ -199,7 +199,7 @@ impl<'a> Lexer<'a> {
     }
 
     /// `#`
-    fn read_token_number_sign(&mut self) -> LexResult<Option<Token>> {
+    fn read_token_number_sign(&mut self) -> LexResult<Option<TokenKind>> {
         debug_assert!(self.cur().is_some());
 
         if self.input.is_at_start() && self.read_token_interpreter()? {
@@ -207,7 +207,7 @@ impl<'a> Lexer<'a> {
         }
 
         self.input.bump(); // '#'
-        Ok(Some(Token::Hash))
+        Ok(Some(TokenKind::Hash))
     }
 
     #[inline(never)]
@@ -547,7 +547,7 @@ impl<'a> Lexer<'a> {
         Ok(Some(vec![c.into()]))
     }
 
-    fn read_token_plus_minus(&mut self, c: u8) -> LexResult<Option<Token>> {
+    fn read_token_plus_minus(&mut self, c: u8) -> LexResult<Option<TokenKind>> {
         let start = self.cur_pos();
 
         self.input.bump();
@@ -565,18 +565,18 @@ impl<'a> Lexer<'a> {
             }
 
             if c == b'+' {
-                PlusPlus
+                TokenKind::PlusPlus
             } else {
-                MinusMinus
+                TokenKind::MinusMinus
             }
         } else if self.input.eat_byte(b'=') {
-            AssignOp(if c == b'+' { AddAssign } else { SubAssign })
+            TokenKind::AssignOp(if c == b'+' { AddAssign } else { SubAssign })
         } else {
-            BinOp(if c == b'+' { Add } else { Sub })
+            TokenKind::BinOp(if c == b'+' { Add } else { Sub })
         }))
     }
 
-    fn read_token_bang_or_eq(&mut self, c: u8) -> LexResult<Option<Token>> {
+    fn read_token_bang_or_eq(&mut self, c: u8) -> LexResult<Option<TokenKind>> {
         let start = self.cur_pos();
         let had_line_break_before_last = self.had_line_break_before_last();
 
@@ -587,7 +587,7 @@ impl<'a> Lexer<'a> {
 
             if self.input.eat_byte(b'=') {
                 if c == b'!' {
-                    BinOp(NotEqEq)
+                    TokenKind::BinOp(NotEqEq)
                 } else {
                     // =======
                     //    ^
@@ -598,28 +598,28 @@ impl<'a> Lexer<'a> {
                         return self.read_token();
                     }
 
-                    BinOp(EqEqEq)
+                    TokenKind::BinOp(EqEqEq)
                 }
             } else if c == b'!' {
-                BinOp(NotEq)
+                TokenKind::BinOp(NotEq)
             } else {
-                BinOp(EqEq)
+                TokenKind::BinOp(EqEq)
             }
         } else if c == b'=' && self.input.eat_byte(b'>') {
             // "=>"
 
-            Arrow
+            TokenKind::Arrow
         } else if c == b'!' {
-            Bang
+            TokenKind::Bang
         } else {
-            AssignOp(Assign)
+            TokenKind::AssignOp(Assign)
         }))
     }
 }
 
 impl<'a> Lexer<'a> {
     #[inline(never)]
-    fn read_slash(&mut self) -> LexResult<Option<Token>> {
+    fn read_slash(&mut self) -> LexResult<Option<TokenKind>> {
         debug_assert_eq!(self.cur(), Some('/'));
 
         // Divide operator
@@ -633,7 +633,7 @@ impl<'a> Lexer<'a> {
     }
 
     #[inline(never)]
-    fn read_token_lt_gt(&mut self) -> LexResult<Option<Token>> {
+    fn read_token_lt_gt(&mut self) -> LexResult<Option<TokenKind>> {
         debug_assert!(self.cur() == Some('<') || self.cur() == Some('>'));
 
         let had_line_break_before_last = self.had_line_break_before_last();

@@ -10,10 +10,10 @@ use swc_common::input::Input;
 use super::{pos_span, util::CharExt, LexResult, Lexer};
 use crate::{
     error::SyntaxError,
-    token::{AssignOpToken, BinOpToken, Token},
+    token::{AssignOpToken, BinOpToken, Token, TokenKind},
 };
 
-pub(super) type ByteHandler = Option<for<'aa> fn(&mut Lexer<'aa>) -> LexResult<Option<Token>>>;
+pub(super) type ByteHandler = Option<for<'aa> fn(&mut Lexer<'aa>) -> LexResult<Option<TokenKind>>>;
 
 /// Lookup table mapping any incoming byte to a handler function defined below.
 pub(super) static BYTE_HANDLERS: [ByteHandler; 256] = [

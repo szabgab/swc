@@ -34,16 +34,14 @@ impl<'a> Lexer<'a> {
                     if cur_pos == self.state.start {
                         if cur == '<' && self.state.is_expr_allowed {
                             self.input.bump();
-                            return Ok(Token::JSXTagStart).map(Some);
+                            return Ok(TokenKind::JSXTagStart).map(Some);
                         }
                         return self.read_token();
                     }
                     out.push_str(self.input.slice(chunk_start, cur_pos));
 
-                    return Ok(Token::JSXText {
-                        raw: Atom::new(out),
-                    })
-                    .map(Some);
+                    self.token_raw = out;
+                    return Ok(Some(TokenKind::JSXText));
                 }
                 '>' => {
                     self.emit_error(
@@ -293,7 +291,8 @@ impl<'a> Lexer<'a> {
             }
         });
 
-        Ok(Token::JSXName { name: slice.into() })
+        self.token_text = slice.into();
+        Ok(TokenKind::JSXName)
     }
 }
 
