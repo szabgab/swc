@@ -67,7 +67,7 @@ impl SpanRange for Range<usize> {
 }
 
 trait WithSpan: Sized {
-    fn span<R>(self, span: R) -> TokenAndSpan
+    fn with_span<R>(self, span: R) -> TokenAndSpan
     where
         R: SpanRange,
     {
@@ -134,7 +134,7 @@ impl WithSpan for AssignOpToken {
 //            span: sp(0..2),
 //            error: SyntaxError::LegacyOctal,
 //        })
-//        .span(0..2)
+//        .with_span(0..2)
 //        .lb(),]
 //    );
 //}
@@ -180,11 +180,11 @@ fn test262_lexer_error_0001() {
                     ctxt: Default::default(),
                 }
             },
-            Dot.span(4..5),
-            "a".span(5..6),
-            LParen.span(6..7),
-            1.span(7..8),
-            RParen.span(8..9),
+            Dot.with_span(4..5),
+            "a".with_span(5..6),
+            LParen.with_span(6..7),
+            1.with_span(7..8),
+            RParen.with_span(8..9),
         ],
     )
 }
@@ -198,16 +198,19 @@ fn test262_lexer_error_0002() {
                 value: "use strict".into(),
                 raw: "'use\\x20strict'".into(),
             }
-            .span(0..15)
+            .with_span(0..15)
             .lb(),
-            Semi.span(15..16),
+            Semi.with_span(15..16),
         ]
     );
 }
 
 #[test]
 fn test262_lexer_error_0003() {
-    assert_eq!(lex(Syntax::default(), r"\u0061"), vec!["a".span(0..6).lb()]);
+    assert_eq!(
+        lex(Syntax::default(), r"\u0061"),
+        vec!["a".with_span(0..6).lb()]
+    );
 }
 
 #[test]
@@ -222,17 +225,20 @@ fn test262_lexer_error_0004() {
 fn ident_escape_unicode() {
     assert_eq!(
         lex(Syntax::default(), r"a\u0061"),
-        vec!["aa".span(0..7).lb()]
+        vec!["aa".with_span(0..7).lb()]
     );
 }
 
 #[test]
 fn ident_escape_unicode_2() {
-    assert_eq!(lex(Syntax::default(), "℘℘"), vec!["℘℘".span(0..6).lb()]);
+    assert_eq!(
+        lex(Syntax::default(), "℘℘"),
+        vec!["℘℘".with_span(0..6).lb()]
+    );
 
     assert_eq!(
         lex(Syntax::default(), r"℘\u2118"),
-        vec!["℘℘".span(0..9).lb()]
+        vec!["℘℘".with_span(0..9).lb()]
     );
 }
 
@@ -376,7 +382,7 @@ fn str_escape_hex() {
             value: "a".into(),
             raw: "'\\x61'".into(),
         }
-        .span(0..6)
+        .with_span(0..6)
         .lb(),]
     );
 }
@@ -389,7 +395,7 @@ fn str_escape_octal() {
             value: "Hello\nWorld".into(),
             raw: "'Hello\\012World'".into(),
         }
-        .span(0..16)
+        .with_span(0..16)
         .lb(),]
     )
 }
@@ -402,7 +408,7 @@ fn str_escape_unicode_long() {
             value: "4".into(),
             raw: "'\\u{00000000034}'".into(),
         }
-        .span(0..17)
+        .with_span(0..17)
         .lb(),]
     );
 }
@@ -412,21 +418,21 @@ fn regexp_unary_void() {
     assert_eq!(
         lex(Syntax::default(), "void /test/"),
         vec![
-            Void.span(0..4).lb(),
-            BinOp(Div).span(5),
-            Word(Word::Ident("test".into())).span(6..10),
-            BinOp(Div).span(10),
+            Void.with_span(0..4).lb(),
+            BinOp(Div).with_span(5),
+            Word(Word::Ident("test".into())).with_span(6..10),
+            BinOp(Div).with_span(10),
         ]
     );
     assert_eq!(
         lex(Syntax::default(), "void (/test/)"),
         vec![
-            Void.span(0..4).lb(),
-            LParen.span(5..6),
-            BinOp(Div).span(6),
-            Word(Word::Ident("test".into())).span(7..11),
-            BinOp(Div).span(11),
-            RParen.span(12..13),
+            Void.with_span(0..4).lb(),
+            LParen.with_span(5..6),
+            BinOp(Div).with_span(6),
+            Word(Word::Ident("test".into())).with_span(7..11),
+            BinOp(Div).with_span(11),
+            RParen.with_span(12..13),
         ]
     );
 }
@@ -436,11 +442,11 @@ fn non_regexp_unary_plus() {
     assert_eq!(
         lex(Syntax::default(), "+{} / 1"),
         vec![
-            tok!('+').span(0..1).lb(),
-            tok!('{').span(1..2),
-            tok!('}').span(2..3),
-            tok!('/').span(4..5),
-            1.span(6..7),
+            tok!('+').with_span(0..1).lb(),
+            tok!('{').with_span(1..2),
+            tok!('}').with_span(2..3),
+            tok!('/').with_span(4..5),
+            1.with_span(6..7),
         ]
     );
 }
@@ -451,7 +457,11 @@ fn non_regexp_unary_plus() {
 fn paren_semi() {
     assert_eq!(
         lex(Syntax::default(), "();"),
-        vec![LParen.span(0).lb(), RParen.span(1), Semi.span(2)]
+        vec![
+            LParen.with_span(0).lb(),
+            RParen.with_span(1),
+            Semi.with_span(2)
+        ]
     );
 }
 
@@ -460,11 +470,11 @@ fn ident_paren() {
     assert_eq!(
         lex(Syntax::default(), "a(bc);"),
         vec![
-            "a".span(0).lb(),
-            LParen.span(1),
-            "bc".span(2..4),
-            RParen.span(4),
-            Semi.span(5),
+            "a".with_span(0).lb(),
+            LParen.with_span(1),
+            "bc".with_span(2..4),
+            RParen.with_span(4),
+            Semi.with_span(5),
         ]
     );
 }
@@ -473,7 +483,7 @@ fn ident_paren() {
 fn read_word() {
     assert_eq!(
         lex(Syntax::default(), "a b c"),
-        vec!["a".span(0).lb(), "b".span(2), "c".span(4)]
+        vec!["a".with_span(0).lb(), "b".with_span(2), "c".with_span(4)]
     )
 }
 
@@ -482,12 +492,12 @@ fn simple_regex() {
     assert_eq!(
         lex(Syntax::default(), "x = /42/i"),
         vec![
-            "x".span(0).lb(),
-            Assign.span(2),
-            BinOp(Div).span(4),
-            42.span(5..7),
-            BinOp(Div).span(7),
-            Word(Word::Ident("i".into())).span(8),
+            "x".with_span(0).lb(),
+            Assign.with_span(2),
+            BinOp(Div).with_span(4),
+            42.with_span(5..7),
+            BinOp(Div).with_span(7),
+            Word(Word::Ident("i".into())).with_span(8),
         ],
     );
 
@@ -503,8 +513,8 @@ fn simple_regex() {
                     ctxt: Default::default(),
                 },
             },
-            42.span(1..3),
-            BinOp(Div).span(3)
+            42.with_span(1..3),
+            BinOp(Div).with_span(3)
         ]
     );
 }
@@ -539,7 +549,7 @@ fn complex_regex() {
 fn simple_div() {
     assert_eq!(
         lex(Syntax::default(), "a / b"),
-        vec!["a".span(0).lb(), Div.span(2), "b".span(4)],
+        vec!["a".with_span(0).lb(), Div.with_span(2), "b".with_span(4)],
     );
 }
 
@@ -611,20 +621,20 @@ fn after_if() {
     assert_eq!(
         lex(Syntax::default(), "if(x){} /y/.test(z)"),
         vec![
-            Keyword::If.span(0..2).lb(),
-            LParen.span(2),
-            "x".span(3),
-            RParen.span(4),
-            LBrace.span(5),
-            RBrace.span(6),
-            Div.span(8),
-            "y".span(9),
-            Div.span(10),
-            Dot.span(11),
-            "test".span(12..16),
-            LParen.span(16),
-            "z".span(17),
-            RParen.span(18),
+            Keyword::If.with_span(0..2).lb(),
+            LParen.with_span(2),
+            "x".with_span(3),
+            RParen.with_span(4),
+            LBrace.with_span(5),
+            RBrace.with_span(6),
+            Div.with_span(8),
+            "y".with_span(9),
+            Div.with_span(10),
+            Dot.with_span(11),
+            "test".with_span(12..16),
+            LParen.with_span(16),
+            "z".with_span(17),
+            RParen.with_span(18),
         ],
     )
 }
@@ -634,8 +644,8 @@ fn after_if() {
 // fn leading_comment() {
 //     assert_eq!(
 //         vec![
-//             BlockComment(" hello world ".into()).span(0..17),
-//             Regex("42".into(), "".into()).span(17..21),
+//             BlockComment(" hello world ".into()).with_span(0..17),
+//             Regex("42".into(), "".into()).with_span(17..21),
 //         ],
 //         lex(Syntax::default(), "/* hello world */  /42/")
 //     )
@@ -646,11 +656,11 @@ fn after_if() {
 // fn line_comment() {
 //     assert_eq!(
 //         vec![
-//             Keyword::Var.span(0..3),
-//             "answer".span(4..10),
-//             Assign.span(11),
-//             42.span(13..15),
-//             LineComment(" the Ultimate".into()).span(17..32),
+//             Keyword::Var.with_span(0..3),
+//             "answer".with_span(4..10),
+//             Assign.with_span(11),
+//             42.with_span(13..15),
+//             LineComment(" the Ultimate".into()).with_span(17..32),
 //         ],
 //         lex(Syntax::default(), "var answer = 42  // the Ultimate"),
 //     )
@@ -661,12 +671,12 @@ fn migrated_0002() {
     assert_eq!(
         lex(Syntax::default(), "tokenize(/42/)"),
         vec![
-            "tokenize".span(0..8).lb(),
-            LParen.span(8),
-            BinOp(Div).span(9),
-            42.span(10..12),
-            BinOp(Div).span(12),
-            RParen.span(13),
+            "tokenize".with_span(0..8).lb(),
+            LParen.with_span(8),
+            BinOp(Div).with_span(9),
+            42.with_span(10..12),
+            BinOp(Div).with_span(12),
+            RParen.with_span(13),
         ],
     )
 }
@@ -676,12 +686,12 @@ fn migrated_0003() {
     assert_eq!(
         lex(Syntax::default(), "(false) /42/"),
         vec![
-            LParen.span(0).lb(),
-            Word::False.span(1..6),
-            RParen.span(6),
-            Div.span(8),
-            42.span(9..11),
-            Div.span(11),
+            LParen.with_span(0).lb(),
+            Word::False.with_span(1..6),
+            RParen.with_span(6),
+            Div.with_span(8),
+            42.with_span(9..11),
+            Div.with_span(11),
         ],
     )
 }
@@ -691,15 +701,15 @@ fn migrated_0004() {
     assert_eq!(
         lex(Syntax::default(), "function f(){} /42/"),
         vec![
-            Function.span(0..8).lb(),
-            "f".span(9),
-            LParen.span(10),
-            RParen.span(11),
-            LBrace.span(12),
-            RBrace.span(13),
-            BinOp(Div).span(15),
-            42.span(16..18),
-            BinOp(Div).span(18),
+            Function.with_span(0..8).lb(),
+            "f".with_span(9),
+            LParen.with_span(10),
+            RParen.with_span(11),
+            LBrace.with_span(12),
+            RBrace.with_span(13),
+            BinOp(Div).with_span(15),
+            42.with_span(16..18),
+            BinOp(Div).with_span(18),
         ]
     );
 }
@@ -710,13 +720,13 @@ fn migrated_0004() {
 // fn migrated_0005() {
 //     assert_eq!(
 //         vec![
-//             Function.span(0..8),
-//             LParen.span(9),
-//             RParen.span(10),
-//             LBrace.span(11),
-//             RBrace.span(12),
-//             Div.span(13),
-//             42.span(14..16),
+//             Function.with_span(0..8),
+//             LParen.with_span(9),
+//             RParen.with_span(10),
+//             LBrace.with_span(11),
+//             RBrace.with_span(12),
+//             Div.with_span(13),
+//             42.with_span(14..16),
 //         ],
 //         lex(Syntax::default(), "function (){} /42")
 //     );
@@ -726,16 +736,16 @@ fn migrated_0004() {
 fn migrated_0006() {
     // This test seems wrong.
     // assert_eq!(
-    //     vec![LBrace.span(0).lb(), RBrace.span(1), Div.span(3), 42.span(4..6)],
-    //     lex(Syntax::default(), "{} /42")
+    //     vec![LBrace.with_span(0).lb(), RBrace.with_span(1), Div.with_span(3),
+    // 42.with_span(4..6)],     lex(Syntax::default(), "{} /42")
     // )
 
     assert_eq!(
         lex(Syntax::default(), "{} /42/"),
         vec![
-            LBrace.span(0).lb(),
-            RBrace.span(1),
-            BinOp(Div).span(3),
+            LBrace.with_span(0).lb(),
+            RBrace.with_span(1),
+            BinOp(Div).with_span(3),
             TokenAndSpan {
                 token: Num {
                     value: 42.0,
@@ -748,7 +758,7 @@ fn migrated_0006() {
                     ctxt: Default::default(),
                 }
             },
-            BinOp(Div).span(6),
+            BinOp(Div).with_span(6),
         ],
     )
 }
