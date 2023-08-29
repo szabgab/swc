@@ -5,7 +5,11 @@ use swc_atoms::js_word;
 use swc_common::{Spanned, SyntaxContext};
 
 use super::*;
-use crate::{lexer::TokenContexts, parser::class_and_fn::IsSimpleParameterList, token::Keyword};
+use crate::{
+    lexer::TokenContexts,
+    parser::class_and_fn::IsSimpleParameterList,
+    token::{Keyword, TokenKind},
+};
 
 impl<I: Tokens> Parser<I> {
     /// `tsNextTokenCanFollowModifier`
@@ -495,7 +499,7 @@ impl<I: Tokens> Parser<I> {
     /// `tsParseTypeOrTypePredicateAnnotation`
     pub(super) fn parse_ts_type_or_type_predicate_ann(
         &mut self,
-        return_token: &'static Token,
+        return_token: &'static TokenKind,
     ) -> PResult<Box<TsTypeAnn>> {
         debug_assert!(self.input.syntax().typescript());
 
@@ -698,7 +702,7 @@ impl<I: Tokens> Parser<I> {
     /// `tsEatThenParseType`
     fn eat_then_parse_ts_type(
         &mut self,
-        token_to_eat: &'static Token,
+        token_to_eat: &'static TokenKind,
     ) -> PResult<Option<Box<TsType>>> {
         if !cfg!(feature = "typescript") {
             return Ok(Default::default());
@@ -716,7 +720,7 @@ impl<I: Tokens> Parser<I> {
     /// `tsExpectThenParseType`
     fn expect_then_parse_ts_type(
         &mut self,
-        token: &'static Token,
+        token: &'static TokenKind,
         token_str: &'static str,
     ) -> PResult<Box<TsType>> {
         debug_assert!(self.input.syntax().typescript());
@@ -2754,7 +2758,7 @@ impl<I: Tokens> Parser<I> {
         &mut self,
         kind: UnionOrIntersection,
         mut parse_constituent_type: F,
-        operator: &'static Token,
+        operator: &'static TokenKind,
     ) -> PResult<Box<TsType>>
     where
         F: FnMut(&mut Self) -> PResult<Box<TsType>>,
