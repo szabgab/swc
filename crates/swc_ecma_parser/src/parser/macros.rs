@@ -142,7 +142,7 @@ macro_rules! is_one_of {
 // This will panic if current != token
 macro_rules! assert_and_bump {
     ($p:expr, $t:tt) => {{
-        const TOKEN: &Token = &tok!($t);
+        const TOKEN: crate::token::TokenKind = tok!($t);
         if cfg!(debug_assertions) && !is!($p, $t) {
             unreachable!(
                 "assertion failed: expected {:?}, got {:?}",
@@ -217,7 +217,7 @@ macro_rules! expect {
 
 macro_rules! expect_exact {
     ($p:expr, $t:tt) => {{
-        const TOKEN: &crate::token::TokenKind = &token_including_semi!($t);
+        const TOKEN: crate::token::TokenKind = token_including_semi!($t);
         if !eat_exact!($p, $t) {
             let cur = $p.input.dump_cur();
             syntax_error!($p, $p.input.cur_span(), SyntaxError::Expected(TOKEN, cur))

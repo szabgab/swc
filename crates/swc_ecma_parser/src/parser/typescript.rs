@@ -2987,7 +2987,7 @@ mod tests {
             let token = &tokens[10];
             assert_eq!(
                 token.token,
-                Token::BinOp(BinOpToken::ZeroFillRShift),
+                TokenKind::BinOp(BinOpToken::ZeroFillRShift),
                 "Token: {:#?}",
                 token.token
             );

@@ -160,7 +160,7 @@ impl<I: Tokens> Parser<I> {
         trace_cur!(self, finish_assignment_expr);
 
         match cur!(self, false) {
-            Ok(&TokenKind::AssignOp(op)) => {
+            Ok(TokenKind::AssignOp(op)) => {
                 let left = if op == AssignOpToken::Assign {
                     self.reparse_expr_as_pat(PatType::AssignPat, cond)
                         .map(Box::new)
