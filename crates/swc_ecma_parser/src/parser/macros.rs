@@ -165,7 +165,7 @@ macro_rules! eat {
             tracing::trace!("eat(';'): cur={:?}", cur!($p, false));
         }
         match $p.input.cur() {
-            Some(&Token::Semi) => {
+            Some(&TokenKind::Semi) => {
                 $p.input.bump();
                 true
             }

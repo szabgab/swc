@@ -357,7 +357,7 @@ impl<I: Tokens> Buffer<I> {
         self.cur.is_some()
     }
 
-    pub fn peek(&mut self) -> Option<&Token> {
+    pub fn peek(&mut self) -> Option<&TokenKind> {
         debug_assert!(
             self.cur.is_some(),
             "parser should not call peek() without knowing current token"
@@ -394,7 +394,7 @@ impl<I: Tokens> Buffer<I> {
 
     /// Get current token. Returns `None` only on eof.
     #[inline]
-    pub fn cur(&mut self) -> Option<&Token> {
+    pub fn cur(&mut self) -> Option<&TokenKind> {
         if self.cur.is_none() {
             self.bump_inner();
         }
