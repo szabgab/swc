@@ -448,18 +448,18 @@ impl State {
         syntax: Syntax,
         prev: Option<TokenType>,
         start: BytePos,
-        next: &Token,
+        next: TokenKind,
         had_line_break: bool,
         had_line_break_before_last: bool,
         is_expr_allowed: bool,
     ) -> bool {
-        let is_next_keyword = matches!(*next, Word(Word::Keyword(..)));
+        let is_next_keyword = matches!(next, TokenKind::Word(Word::Keyword(..)));
 
         if is_next_keyword && prev == Some(TokenType::Dot) {
             false
         } else {
             // ported updateContext
-            match *next {
+            match next {
                 tok!(')') | tok!('}') => {
                     // TODO: Verify
                     if context.len() == 1 {
