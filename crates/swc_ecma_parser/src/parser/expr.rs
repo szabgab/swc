@@ -2011,7 +2011,9 @@ impl<I: Tokens> Parser<I> {
             || (!is!(self, '*')
                 && !is!(self, '/')
                 && !is!(self, "/=")
-                && !cur!(self, false).map(Token::starts_expr).unwrap_or(true))
+                && !cur!(self, false)
+                    .map(TokenKind::starts_expr)
+                    .unwrap_or(true))
         {
             Ok(Box::new(Expr::Yield(YieldExpr {
                 span: span!(self, start),
@@ -2059,12 +2061,12 @@ impl<I: Tokens> Parser<I> {
         let start = cur_pos!(self);
 
         let v = match cur!(self, true)? {
-            Word(Word::Null) => {
+            TokenKind::Word(WordKind::Null) => {
                 bump!(self);
                 let span = span!(self, start);
                 Lit::Null(Null { span })
             }
-            Word(Word::True) | Word(Word::False) => {
+            TokenKind::Word(WordKind::True) | TokenKind::Word(WordKind::False) => {
                 let value = is!(self, "true");
                 bump!(self);
                 let span = span!(self, start);
@@ -2079,7 +2081,7 @@ impl<I: Tokens> Parser<I> {
                 }),
                 _ => unreachable!(),
             },
-            Token::Num { .. } => match bump!(self) {
+            TokenKind::Num => match bump!(self) {
                 Token::Num { value, raw } => Lit::Num(Number {
                     span: span!(self, start),
                     value,
@@ -2087,7 +2089,7 @@ impl<I: Tokens> Parser<I> {
                 }),
                 _ => unreachable!(),
             },
-            Token::BigInt { .. } => match bump!(self) {
+            TokenKind::BigInt => match bump!(self) {
                 Token::BigInt { value, raw } => Lit::BigInt(BigInt {
                     span: span!(self, start),
                     value,

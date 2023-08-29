@@ -168,7 +168,7 @@ pub enum Token {
     Error(Error),
 }
 
-impl Token {
+impl TokenKind {
     pub(crate) const fn before_expr(&self) -> bool {
         match self {
             Self::Word(w) => w.before_expr(),
@@ -314,17 +314,17 @@ pub enum Word {
     Ident(JsWord),
 }
 
-impl Word {
+impl WordKind {
     pub(crate) const fn before_expr(&self) -> bool {
         match self {
-            Word::Keyword(k) => k.before_expr(),
+            Self::Keyword(k) => k.before_expr(),
             _ => false,
         }
     }
 
     pub(crate) const fn starts_expr(&self) -> bool {
         match self {
-            Word::Keyword(k) => k.starts_expr(),
+            Self::Keyword(k) => k.starts_expr(),
             _ => true,
         }
     }
