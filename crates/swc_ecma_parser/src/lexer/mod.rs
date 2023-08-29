@@ -159,6 +159,8 @@ impl<'a> Lexer<'a> {
             module_errors: Default::default(),
             atoms: Default::default(),
             buf: Rc::new(RefCell::new(String::with_capacity(256))),
+            token_text: Default::default(),
+            token_raw: String::with_capacity(8),
         }
     }
 
