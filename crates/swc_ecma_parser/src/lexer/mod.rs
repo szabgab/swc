@@ -334,7 +334,7 @@ impl<'a> Lexer<'a> {
 
         // '|=', '&='
         if self.input.eat_byte(b'=') {
-            return Ok(AssignOp(match token {
+            return Ok(TokenKind::AssignOp(match token {
                 BitAnd => BitAndAssign,
                 BitOr => BitOrAssign,
                 _ => unreachable!(),
@@ -347,7 +347,7 @@ impl<'a> Lexer<'a> {
 
             if self.input.cur() == Some('=') {
                 self.input.bump();
-                return Ok(AssignOp(match token {
+                return Ok(TokenKind::AssignOp(match token {
                     BitAnd => op!("&&="),
                     BitOr => op!("||="),
                     _ => unreachable!(),
@@ -364,14 +364,14 @@ impl<'a> Lexer<'a> {
                 return self.error_span(span, SyntaxError::TS1185);
             }
 
-            return Ok(BinOp(match token {
+            return Ok(TokenKind::BinOp(match token {
                 BitAnd => LogicalAnd,
                 BitOr => LogicalOr,
                 _ => unreachable!(),
             }));
         }
 
-        Ok(BinOp(token))
+        Ok(TokenKind::BinOp(token))
     }
 
     /// Read a token given `*` or `%`.
@@ -381,18 +381,22 @@ impl<'a> Lexer<'a> {
     fn read_token_mul_mod(&mut self, c: u8) -> LexResult<TokenKind> {
         let is_mul = c == b'*';
         self.input.bump();
-        let mut token = if is_mul { BinOp(Mul) } else { BinOp(Mod) };
+        let mut token = if is_mul {
+            TokenKind::BinOp(Mul)
+        } else {
+            TokenKind::BinOp(Mod)
+        };
 
         // check for **
         if is_mul && self.input.eat_byte(b'*') {
-            token = BinOp(Exp)
+            token = TokenKind::BinOp(Exp)
         }
 
         if self.input.eat_byte(b'=') {
             token = match token {
-                BinOp(Mul) => AssignOp(MulAssign),
-                BinOp(Mod) => AssignOp(ModAssign),
-                BinOp(Exp) => AssignOp(ExpAssign),
+                TokenKind::BinOp(Mul) => TokenKind::AssignOp(MulAssign),
+                TokenKind::BinOp(Mod) => TokenKind::AssignOp(ModAssign),
+                TokenKind::BinOp(Exp) => TokenKind::AssignOp(ExpAssign),
                 _ => unreachable!(),
             }
         }
