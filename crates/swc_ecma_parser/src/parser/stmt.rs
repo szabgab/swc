@@ -932,7 +932,7 @@ impl<'a, I: Tokens> Parser<I> {
             while !eat!(self, ';') {
                 bump!(self);
 
-                if let Some(Token::Error(_)) = self.input.cur() {
+                if let Some(TokenKind::Error) = self.input.cur() {
                     break;
                 }
             }
@@ -1105,7 +1105,7 @@ impl<'a, I: Tokens> Parser<I> {
 
         expect!(self, '{');
 
-        let stmts = self.parse_block_body(allow_directives, false, Some(&tok!('}')))?;
+        let stmts = self.parse_block_body(allow_directives, false, Some(tok!('}')))?;
 
         let span = span!(self, start);
         Ok(BlockStmt { span, stmts })
