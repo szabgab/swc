@@ -165,11 +165,11 @@ macro_rules! eat {
             tracing::trace!("eat(';'): cur={:?}", cur!($p, false));
         }
         match $p.input.cur() {
-            Some(&crate::token::TokenKind::Semi) => {
+            Some(crate::token::TokenKind::Semi) => {
                 $p.input.bump();
                 true
             }
-            None | Some(&tok!('}')) => true,
+            None | Some(tok!('}')) => true,
             _ => $p.input.had_line_break_before_cur(),
         }
     }};
@@ -239,7 +239,7 @@ macro_rules! cur {
         let pos = $p.input.last_pos();
         let last = Span::new(pos, pos, Default::default());
         let is_err_token = match $p.input.cur() {
-            Some(&$crate::token::TokenKind::Error) => true,
+            Some($crate::token::TokenKind::Error) => true,
             _ => false,
         };
         if is_err_token {
