@@ -15,9 +15,20 @@ use swc_ecma_ast::BinaryOp;
 pub(crate) use self::{AssignOpToken::*, BinOpToken::*, Keyword::*, Token::*};
 use crate::{error::Error, lexer::LexResult};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub enum WordKind {
+    Keyword(Keyword),
+
+    Null,
+    True,
+    False,
+
+    Ident,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum TokenKind {
-    Word(Word),
+    Word(WordKind),
     Arrow,
     Hash,
     At,
