@@ -499,7 +499,7 @@ impl<I: Tokens> Parser<I> {
     /// `tsParseTypeOrTypePredicateAnnotation`
     pub(super) fn parse_ts_type_or_type_predicate_ann(
         &mut self,
-        return_token: &'static TokenKind,
+        return_token: TokenKind,
     ) -> PResult<Box<TsTypeAnn>> {
         debug_assert!(self.input.syntax().typescript());
 
@@ -700,10 +700,7 @@ impl<I: Tokens> Parser<I> {
     }
 
     /// `tsEatThenParseType`
-    fn eat_then_parse_ts_type(
-        &mut self,
-        token_to_eat: &'static TokenKind,
-    ) -> PResult<Option<Box<TsType>>> {
+    fn eat_then_parse_ts_type(&mut self, token_to_eat: TokenKind) -> PResult<Option<Box<TsType>>> {
         if !cfg!(feature = "typescript") {
             return Ok(Default::default());
         }
@@ -720,7 +717,7 @@ impl<I: Tokens> Parser<I> {
     /// `tsExpectThenParseType`
     fn expect_then_parse_ts_type(
         &mut self,
-        token: &'static TokenKind,
+        token: TokenKind,
         token_str: &'static str,
     ) -> PResult<Box<TsType>> {
         debug_assert!(self.input.syntax().typescript());
@@ -2758,7 +2755,7 @@ impl<I: Tokens> Parser<I> {
         &mut self,
         kind: UnionOrIntersection,
         mut parse_constituent_type: F,
-        operator: &'static TokenKind,
+        operator: TokenKind,
     ) -> PResult<Box<TsType>>
     where
         F: FnMut(&mut Self) -> PResult<Box<TsType>>,
