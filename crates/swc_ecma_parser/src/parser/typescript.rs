@@ -445,8 +445,8 @@ impl<I: Tokens> Parser<I> {
         }
 
         let name = self.in_type().parse_ident_name()?;
-        let constraint = self.eat_then_parse_ts_type(&tok!("extends"))?;
-        let default = self.eat_then_parse_ts_type(&tok!('='))?;
+        let constraint = self.eat_then_parse_ts_type(tok!("extends"))?;
+        let default = self.eat_then_parse_ts_type(tok!('='))?;
 
         Ok(TsTypeParam {
             span: span!(self, start),
@@ -618,7 +618,7 @@ impl<I: Tokens> Parser<I> {
             ) {
                 Ok(None)
             } else if p.input.had_line_break_before_cur()
-                || matches!(cur!(p, false), Ok(Token::BinOp(..)))
+                || matches!(cur!(p, false), Ok(TokenKind::BinOp(..)))
                 || !p.is_start_of_expr()?
             {
                 Ok(Some(type_args))
@@ -757,7 +757,7 @@ impl<I: Tokens> Parser<I> {
         let start = cur_pos!(self);
         // Computed property names are grammar errors in an enum, so accept just string
         // literal or identifier.
-        let id = match *cur!(self, true)? {
+        let id = match cur!(self, true)? {
             TokenKind::Str => self.parse_lit().map(|lit| match lit {
                 Lit::Str(s) => TsEnumMemberId::Str(s),
                 _ => unreachable!(),
@@ -782,7 +782,7 @@ impl<I: Tokens> Parser<I> {
                     raw: Some(new_raw.into()),
                 })
             }
-            Token::LBracket => {
+            TokenKind::LBracket => {
                 assert_and_bump!(self, '[');
                 let _ = self.parse_expr()?;
 
@@ -904,7 +904,7 @@ impl<I: Tokens> Parser<I> {
         let (global, id) = if is!(self, "global") {
             let id = self.parse_ident_name()?;
             (true, TsModuleName::Ident(id))
-        } else if matches!(*cur!(self, true)?, TokenKind::Str) {
+        } else if matches!(cur!(self, true)?, TokenKind::Str) {
             let id = self.parse_lit().map(|lit| match lit {
                 Lit::Str(s) => TsModuleName::Str(s),
                 _ => unreachable!(),
@@ -1156,7 +1156,7 @@ impl<I: Tokens> Parser<I> {
 
         let id = self.parse_ident_name()?;
         let type_params = self.try_parse_ts_type_params(true, false)?;
-        let type_ann = self.expect_then_parse_ts_type(&tok!('='), "=")?;
+        let type_ann = self.expect_then_parse_ts_type(tok!('='), "=")?;
         expect!(self, ';');
         Ok(Box::new(TsTypeAliasDecl {
             declare: false,

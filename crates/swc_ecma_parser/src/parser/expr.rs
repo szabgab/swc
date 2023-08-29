@@ -134,7 +134,7 @@ impl<I: Tokens> Parser<I> {
             return self.parse_yield_expr();
         }
 
-        self.state.potential_arrow_start = match *cur!(self, true)? {
+        self.state.potential_arrow_start = match cur!(self, true)? {
             TokenKind::Word(WordKind::Ident) | tok!('(') | tok!("yield") => Some(cur_pos!(self)),
             _ => None,
         };
@@ -828,7 +828,7 @@ impl<I: Tokens> Parser<I> {
             // TODO: Remove clone
             let items_ref = &paren_items;
             if let Some(expr) = self.try_parse_ts(|p| {
-                let return_type = p.parse_ts_type_or_type_predicate_ann(&tok!(':'))?;
+                let return_type = p.parse_ts_type_or_type_predicate_ann(tok!(':'))?;
 
                 expect!(p, "=>");
 
@@ -868,7 +868,7 @@ impl<I: Tokens> Parser<I> {
             && is!(self, ':')
         {
             self.try_parse_ts(|p| {
-                let return_type = p.parse_ts_type_or_type_predicate_ann(&tok!(':'))?;
+                let return_type = p.parse_ts_type_or_type_predicate_ann(tok!(':'))?;
 
                 if !is!(p, "=>") {
                     unexpected!(p, "fail")
@@ -916,7 +916,7 @@ impl<I: Tokens> Parser<I> {
                 type_params: None,
             };
             if let BlockStmtOrExpr::BlockStmt(..) = &*arrow_expr.body {
-                if let Ok(&Token::BinOp(..)) = cur!(self, false) {
+                if let Ok(TokenKind::BinOp(..)) = cur!(self, false) {
                     // ) is required
                     self.emit_err(self.input.cur_span(), SyntaxError::TS1005);
                     let errorred_expr =
@@ -1097,8 +1097,8 @@ impl<I: Tokens> Parser<I> {
     pub(super) fn parse_tpl_element(&mut self, is_tagged_tpl: bool) -> PResult<TplElement> {
         let start = cur_pos!(self);
 
-        let (raw, cooked) = match *cur!(self, true)? {
-            Token::Template { .. } => match bump!(self) {
+        let (raw, cooked) = match cur!(self, true)? {
+            TokenKind::Template => match bump!(self) {
                 Token::Template { raw, cooked, .. } => match cooked {
                     Ok(cooked) => (raw, Some(cooked)),
                     Err(err) => {
@@ -1581,15 +1581,15 @@ impl<I: Tokens> Parser<I> {
                     Either::Right(r) => Box::new(Box::new(r).into()),
                 }
             }
-            match *cur!(self, true)? {
-                Token::JSXText { .. } => {
+            match cur!(self, true)? {
+                TokenKind::JSXText => {
                     return self
                         .parse_jsx_text()
                         .map(Lit::JSXText)
                         .map(Expr::Lit)
                         .map(Box::new);
                 }
-                Token::JSXTagStart => {
+                TokenKind::JSXTagStart => {
                     return self.parse_jsx_element().map(into_expr);
                 }
                 _ => {}
@@ -1663,7 +1663,7 @@ impl<I: Tokens> Parser<I> {
             }
             debug_assert_ne!(
                 cur!(self, false).ok(),
-                Some(&tok!('(')),
+                Some(tok!('(')),
                 "parse_new_expr() should eat paren if it exists"
             );
             return Ok(Box::new(Expr::New(NewExpr { type_args, ..ne })));
@@ -1745,7 +1745,7 @@ impl<I: Tokens> Parser<I> {
             let is_async = is!(self, "async")
                 && matches!(
                     peek!(self),
-                    Ok(tok!('(') | tok!("function") | Token::Word(..))
+                    Ok(tok!('(') | tok!("function") | TokenKind::Word(..))
                 );
 
             let start = cur_pos!(self);
@@ -1772,7 +1772,7 @@ impl<I: Tokens> Parser<I> {
                     } else {
                         let mut expr = self.parse_bin_expr()?;
 
-                        if let Ok(&Token::AssignOp(..)) = cur!(self, false) {
+                        if let Ok(TokenKind::AssignOp(..)) = cur!(self, false) {
                             expr = self.finish_assignment_expr(start, expr)?
                         }
 
@@ -2012,6 +2012,7 @@ impl<I: Tokens> Parser<I> {
                 && !is!(self, '/')
                 && !is!(self, "/=")
                 && !cur!(self, false)
+                    .as_ref()
                     .map(TokenKind::starts_expr)
                     .unwrap_or(true))
         {
