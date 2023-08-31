@@ -298,14 +298,15 @@ pub struct TokenAndSpan {
     pub token: TokenKind,
     /// Had a line break before this token?
     pub had_line_break: bool,
-    pub span_lo: BytePos,
-    pub span_hi: BytePos,
+    pub span: SmallSpan,
 }
+
+pub type SmallSpan = (BytePos, BytePos);
 
 impl Spanned for TokenAndSpan {
     #[inline(always)]
     fn span(&self) -> Span {
-        Span::new(self.span_lo, self.span_hi, Default::default())
+        Span::new(self.span.0, self.span.1, Default::default())
     }
 }
 
