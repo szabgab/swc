@@ -104,7 +104,7 @@ impl From<TokenKind> for TokenType {
             _ => TokenType::Other {
                 before_expr: t.before_expr(),
                 can_have_trailing_comment: matches!(
-                    *t,
+                    t,
                     TokenKind::Num { .. }
                         | TokenKind::Str
                         | TokenKind::Word(WordKind::Ident(..))
@@ -331,13 +331,19 @@ impl<'a> Iterator for Lexer<'a> {
             self.read_token()
         })();
 
-        let token = match res.map_err(Token::Error).map_err(Some) {
+        let token = match res
+            .map_err(|err| {
+                self.token_error = Some(err);
+                TokenKind::Error
+            })
+            .map_err(Some)
+        {
             Ok(t) => t,
             Err(e) => e,
         };
 
         let span = self.span(start);
-        if let Some(ref token) = token {
+        if let Some(token) = token {
             if let Some(comments) = self.comments_buffer.as_mut() {
                 for comment in comments.take_pending_leading() {
                     comments.push(BufferedComment {

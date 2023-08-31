@@ -133,6 +133,7 @@ pub struct Lexer<'a> {
     module_errors: Rc<RefCell<Vec<Error>>>,
 
     token_raw: String,
+    token_error: Option<Error>,
 }
 
 impl FusedIterator for Lexer<'_> {}
@@ -161,6 +162,7 @@ impl<'a> Lexer<'a> {
             buf: Rc::new(RefCell::new(String::with_capacity(256))),
             token_text: Default::default(),
             token_raw: String::with_capacity(8),
+            token_error: None,
         }
     }
 

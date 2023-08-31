@@ -19,7 +19,7 @@ macro_rules! is {
     ($p:expr, BindingIdent) => {{
         let ctx = $p.ctx();
         match cur!($p, false) {
-            Ok(crate::token::TokenKind::Word(w)) => !ctx.is_reserved_word(&w.cow()),
+            Ok(crate::token::TokenKind::Word(w)) => !ctx.is_reserved(w),
             _ => false,
         }
     }};
@@ -27,7 +27,7 @@ macro_rules! is {
     ($p:expr, IdentRef) => {{
         let ctx = $p.ctx();
         match cur!($p, false) {
-            Ok(crate::token::TokenKind::Word(w)) => !ctx.is_reserved_word(&w.cow()),
+            Ok(crate::token::TokenKind::Word(w)) => !ctx.is_reserved(w),
             _ => false,
         }
     }};

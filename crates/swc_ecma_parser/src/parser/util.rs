@@ -4,8 +4,8 @@ use super::*;
 use crate::token::{IdentKind, Keyword, KnownIdent, WordKind};
 
 impl Context {
-    pub(crate) fn is_reserved(self, word: &WordKind) -> bool {
-        match *word {
+    pub(crate) fn is_reserved(self, word: WordKind) -> bool {
+        match word {
             WordKind::Keyword(Keyword::Let) => self.strict,
             WordKind::Keyword(Keyword::Await) => self.in_async || self.strict,
             WordKind::Keyword(Keyword::Yield) => self.in_generator || self.strict,
