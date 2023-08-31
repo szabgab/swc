@@ -423,7 +423,7 @@ impl State {
         matches!(self.token_type, Some(TokenType::Template))
     }
 
-    fn update(&mut self, start: BytePos, next: &Token) {
+    fn update(&mut self, start: BytePos, next: TokenKind) {
         if cfg!(feature = "debug") {
             trace!(
                 "updating state: next={:?}, had_line_break={} ",
