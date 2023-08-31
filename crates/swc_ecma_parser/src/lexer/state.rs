@@ -83,36 +83,36 @@ impl TokenType {
     }
 }
 
-impl<'a> From<&'a Token> for TokenType {
+impl From<TokenKind> for TokenType {
     #[inline]
-    fn from(t: &Token) -> Self {
-        match *t {
-            Token::Template { .. } => TokenType::Template,
-            Token::Dot => TokenType::Dot,
-            Token::Colon => TokenType::Colon,
-            Token::LBrace => TokenType::LBrace,
-            Token::RParen => TokenType::RParen,
-            Token::Semi => TokenType::Semi,
-            Token::JSXTagEnd => TokenType::JSXTagEnd,
-            Token::JSXTagStart => TokenType::JSXTagStart,
-            Token::JSXText { .. } => TokenType::JSXText,
-            Token::JSXName { .. } => TokenType::JSXName,
-            Token::BinOp(op) => TokenType::BinOp(op),
-            Token::Arrow => TokenType::Arrow,
+    fn from(t: TokenKind) -> Self {
+        match t {
+            TokenKind::Template { .. } => TokenType::Template,
+            TokenKind::Dot => TokenType::Dot,
+            TokenKind::Colon => TokenType::Colon,
+            TokenKind::LBrace => TokenType::LBrace,
+            TokenKind::RParen => TokenType::RParen,
+            TokenKind::Semi => TokenType::Semi,
+            TokenKind::JSXTagEnd => TokenType::JSXTagEnd,
+            TokenKind::JSXTagStart => TokenType::JSXTagStart,
+            TokenKind::JSXText { .. } => TokenType::JSXText,
+            TokenKind::JSXName { .. } => TokenType::JSXName,
+            TokenKind::BinOp(op) => TokenType::BinOp(op),
+            TokenKind::Arrow => TokenType::Arrow,
 
-            Token::Word(Word::Keyword(k)) => TokenType::Keyword(k),
+            TokenKind::Word(Word::Keyword(k)) => TokenType::Keyword(k),
             _ => TokenType::Other {
                 before_expr: t.before_expr(),
                 can_have_trailing_comment: matches!(
                     *t,
-                    Token::Num { .. }
+                    TokenKind::Num { .. }
                         | TokenKind::Str
-                        | Token::Word(Word::Ident(..))
-                        | Token::DollarLBrace
-                        | Token::Regex(..)
-                        | Token::BigInt { .. }
-                        | Token::JSXText { .. }
-                        | Token::RBrace
+                        | TokenKind::Word(Word::Ident(..))
+                        | TokenKind::DollarLBrace
+                        | TokenKind::Regex(..)
+                        | TokenKind::BigInt { .. }
+                        | TokenKind::JSXText { .. }
+                        | TokenKind::RBrace
                 ),
             },
         }
@@ -316,7 +316,7 @@ impl<'a> Iterator for Lexer<'a> {
                             return self.read_token();
                         }
 
-                        return Ok(Some(Token::JSXTagStart));
+                        return Ok(Some(TokenKind::JSXTagStart));
                     }
                 }
             }

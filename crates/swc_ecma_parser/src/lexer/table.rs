@@ -141,9 +141,9 @@ const CRT: ByteHandler = Some(|lexer| {
     lexer.input.bump_bytes(1);
     Ok(Some(if lexer.input.cur_as_ascii() == Some(b'=') {
         lexer.input.bump_bytes(1);
-        Token::AssignOp(AssignOpToken::BitXorAssign)
+        TokenKind::AssignOp(AssignOpToken::BitXorAssign)
     } else {
-        Token::BinOp(BinOpToken::BitXor)
+        TokenKind::BinOp(BinOpToken::BitXor)
     }))
 });
 
