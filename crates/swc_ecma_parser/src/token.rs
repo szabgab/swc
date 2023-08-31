@@ -798,4 +798,8 @@ known_ident!(
     Meta => "meta",
     Target => "target",
     Satisfies => "satisfies",
+    Package => "package",
+    Protected => "protected",
+    Private => "private",
+    Public => "public",
 );
