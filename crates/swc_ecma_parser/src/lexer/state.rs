@@ -100,18 +100,18 @@ impl From<TokenKind> for TokenType {
             TokenKind::BinOp(op) => TokenType::BinOp(op),
             TokenKind::Arrow => TokenType::Arrow,
 
-            TokenKind::Word(Word::Keyword(k)) => TokenType::Keyword(k),
+            TokenKind::Word(WordKind::Keyword(k)) => TokenType::Keyword(k),
             _ => TokenType::Other {
                 before_expr: t.before_expr(),
                 can_have_trailing_comment: matches!(
                     *t,
                     TokenKind::Num { .. }
                         | TokenKind::Str
-                        | TokenKind::Word(Word::Ident(..))
+                        | TokenKind::Word(WordKind::Ident(..))
                         | TokenKind::DollarLBrace
-                        | TokenKind::Regex(..)
-                        | TokenKind::BigInt { .. }
-                        | TokenKind::JSXText { .. }
+                        | TokenKind::Regex
+                        | TokenKind::BigInt
+                        | TokenKind::JSXText
                         | TokenKind::RBrace
                 ),
             },
