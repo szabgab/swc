@@ -14,7 +14,7 @@ impl<I: Tokens> Parser<I> {
         trace_cur!(self, parse_jsx_ident);
 
         let ctx = self.ctx();
-        match *cur!(self, true)? {
+        match cur!(self, true)? {
             TokenKind::JSXName => match bump!(self) {
                 Token::JSXName { name } => {
                     let span = self.input.prev_span();
@@ -78,7 +78,7 @@ impl<I: Tokens> Parser<I> {
 
         let start = cur_pos!(self);
 
-        match *cur!(self, true)? {
+        match cur!(self, true)? {
             tok!('{') => {
                 let node = self.parse_jsx_expr_container(start)?;
 
