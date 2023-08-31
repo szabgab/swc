@@ -789,5 +789,13 @@ known_ident!(
     String => "string",
     Object => "object",
     Number => "number",
+    Bigint => "bigint",
+    Boolean => "boolean",
     Never => "never",
+    Assert => "assert",
+    Namespace => "namespace",
+    Accessor => "accessor",
+    Meta => "meta",
+    Target => "target",
+    Satisfies => "satisfies",
 );
