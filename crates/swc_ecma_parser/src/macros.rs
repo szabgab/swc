@@ -153,11 +153,8 @@ macro_rules! tok {
         crate::token::TokenKind::RBracket
     };
 
-    ("async") => {
-        known_ident_token!("async")
-    };
-    ("as") => {
-        known_ident_token!("as")
+    ("let") => {
+        crate::token::TokenKind::Word(crate::token::WordKind::Keyword(crate::token::Keyword::Let))
     };
     ("await") => {
         crate::token::TokenKind::Word(crate::token::WordKind::Keyword(
