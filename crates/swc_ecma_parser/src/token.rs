@@ -766,4 +766,10 @@ known_ident!(
     Of => "of",
     Type => "type",
     Global => "global",
+    Static => "static",
+    Using => "using",
+    Readonly => "readonly",
+    Unique => "unique",
+    Keyof => "keyof",
+    Declare => "declare",
 );
