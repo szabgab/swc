@@ -666,7 +666,7 @@ impl TokenKind {
             Self::Word(crate::token::WordKind::Keyword(crate::token::Keyword::Let))
                 | tok!('{')
                 | tok!('[')
-                | Self::Word(WordKind::Ident)
+                | Self::Word(WordKind::Ident(..))
                 | tok!("yield")
                 | tok!("await")
         )

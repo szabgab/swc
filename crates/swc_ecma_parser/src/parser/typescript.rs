@@ -40,7 +40,7 @@ impl<I: Tokens> Parser<I> {
 
         let pos = {
             let modifier = match cur!(self, true)? {
-                TokenKind::Word(WordKind::Ident)
+                TokenKind::Word(WordKind::Ident(..))
                 | TokenKind::Word(WordKind::Keyword(Keyword::In | Keyword::Const)) => w.cow(),
 
                 _ => return Ok(None),
@@ -1421,7 +1421,7 @@ impl<I: Tokens> Parser<I> {
             self.with_ctx(ctx).parse_with(|p| {
                 // We check if it's valid for it to be a private name when we push it.
                 let key = match cur!(p, true)? {
-                    Token::Num { .. } | TokenKind::Str => p.parse_new_expr(),
+                    TokenKind::Num | TokenKind::Str => p.parse_new_expr(),
                     _ => p.parse_maybe_private_name().map(|e| match e {
                         Either::Left(e) => {
                             p.emit_err(e.span(), SyntaxError::PrivateNameInInterface);
@@ -2064,7 +2064,7 @@ impl<I: Tokens> Parser<I> {
         let start = cur_pos!(self);
 
         match cur!(self, true)? {
-            Token::Word(Word::Ident(..))
+            TokenKind::Word(Word::Ident(..))
             | tok!("void")
             | tok!("yield")
             | tok!("null")
@@ -2511,7 +2511,7 @@ impl<I: Tokens> Parser<I> {
                     .map(Some);
             } else if is!(p, IdentName) {
                 let value = match cur!(p, true)? {
-                    Token::Word(ref w) => w.clone().into(),
+                    TokenKind::Word(ref w) => w.clone().into(),
                     _ => unreachable!(),
                 };
                 return p
