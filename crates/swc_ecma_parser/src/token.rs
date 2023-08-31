@@ -759,6 +759,10 @@ macro_rules! known_ident {
 }
 
 known_ident!(
+    Abstract => "abstract",
     As => "as",
     Async => "async",
+    From => "from",
+    Of => "of",
+    Type => "type",
 );
