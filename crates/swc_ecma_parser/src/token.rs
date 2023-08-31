@@ -772,4 +772,7 @@ known_ident!(
     Unique => "unique",
     Keyof => "keyof",
     Declare => "declare",
+    Enum => "enum",
+    Is => "is",
+    Infer => "infer",
 );
