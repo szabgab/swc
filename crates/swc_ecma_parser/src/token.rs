@@ -725,3 +725,15 @@ impl Debug for Token {
         Ok(())
     }
 }
+
+macro_rules! known_ident {
+    (
+        $(
+            $name:ident => $value:literal,
+        ),*
+    ) => {};
+}
+
+known_ident!(
+    As => "as",
+);
