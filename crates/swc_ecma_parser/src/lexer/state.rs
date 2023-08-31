@@ -459,7 +459,7 @@ impl State {
         had_line_break_before_last: bool,
         is_expr_allowed: bool,
     ) -> bool {
-        let is_next_keyword = matches!(next, TokenKind::Word(Word::Keyword(..)));
+        let is_next_keyword = matches!(next, TokenKind::Word(WordKind::Keyword(..)));
 
         if is_next_keyword && prev == Some(TokenType::Dot) {
             false
@@ -618,14 +618,14 @@ impl State {
                 }
 
                 // tt.jsxTagStart.updateContext
-                Token::JSXTagStart => {
+                TokenKind::JSXTagStart => {
                     context.push(TokenContext::JSXExpr); // treat as beginning of JSX expression
                     context.push(TokenContext::JSXOpeningTag); // start opening tag context
                     false
                 }
 
                 // tt.jsxTagEnd.updateContext
-                Token::JSXTagEnd => {
+                TokenKind::JSXTagEnd => {
                     let out = context.pop();
                     if (out == Some(TokenContext::JSXOpeningTag)
                         && prev == Some(TokenType::BinOp(BinOpToken::Div)))

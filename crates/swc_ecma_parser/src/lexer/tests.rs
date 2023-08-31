@@ -173,11 +173,7 @@ fn test262_lexer_error_0001() {
                     raw: "123.".into(),
                 },
                 had_line_break: true,
-                span: Span {
-                    lo: BytePos(1),
-                    hi: BytePos(5),
-                    ctxt: Default::default(),
-                }
+                span: (BytePos(1), BytePos(5))
             },
             Dot.with_span(4..5),
             "a".with_span(5..6),
