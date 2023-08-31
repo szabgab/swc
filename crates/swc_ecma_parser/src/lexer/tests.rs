@@ -14,14 +14,13 @@ use crate::{
     lexer::state::lex_errors,
 };
 
-fn sp(r: Range<usize>) -> Span {
-    Span {
-        // +1 as bytepos starts at 1
-        lo: BytePos((r.start + 1) as u32),
-        // +1 as bytepos starts at 1
-        hi: BytePos((r.end + 1) as u32),
-        ctxt: Default::default(),
-    }
+fn sp(r: Range<usize>) -> SmallSpan {
+    // +1 as bytepos starts at 1
+    let lo = BytePos((r.start + 1) as u32);
+    // +1 as bytepos starts at 1
+    let hi = BytePos((r.end + 1) as u32);
+
+    (lo, hi)
 }
 
 trait LineBreak: Into<TokenAndSpan> {

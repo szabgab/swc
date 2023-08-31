@@ -429,7 +429,7 @@ impl<I: Tokens> Buffer<I> {
         let _ = self.cur();
         self.cur
             .as_ref()
-            .map(|item| item.span_lo)
+            .map(|item| item.span.0)
             .unwrap_or_else(|| {
                 // eof
                 self.last_pos()
