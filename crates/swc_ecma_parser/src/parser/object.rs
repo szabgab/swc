@@ -4,7 +4,7 @@ use swc_atoms::js_word;
 use swc_common::Spanned;
 
 use super::*;
-use crate::parser::class_and_fn::is_not_this;
+use crate::{parser::class_and_fn::is_not_this, token::WordKind};
 
 impl<I: Tokens> Parser<I> {
     /// Parse a object literal or object pattern.
@@ -61,7 +61,7 @@ impl<I: Tokens> Parser<I> {
                     }),
                     _ => unreachable!(),
                 },
-                Token::Num { .. } => match bump!(p) {
+                TokenKind::Num => match bump!(p) {
                     Token::Num { value, raw } => PropName::Num(Number {
                         span: span!(p, start),
                         value,
@@ -69,7 +69,7 @@ impl<I: Tokens> Parser<I> {
                     }),
                     _ => unreachable!(),
                 },
-                Token::BigInt { .. } => match bump!(p) {
+                TokenKind::BigInt => match bump!(p) {
                     Token::BigInt { value, raw } => PropName::BigInt(BigInt {
                         span: span!(p, start),
                         value,
@@ -77,7 +77,7 @@ impl<I: Tokens> Parser<I> {
                     }),
                     _ => unreachable!(),
                 },
-                Word(..) => match bump!(p) {
+                TokenKind::Word(..) => match bump!(p) {
                     Word(w) => PropName::Ident(Ident::new(w.into(), span!(p, start))),
                     _ => unreachable!(),
                 },

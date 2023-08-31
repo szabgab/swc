@@ -2064,7 +2064,7 @@ impl<I: Tokens> Parser<I> {
         let start = cur_pos!(self);
 
         match cur!(self, true)? {
-            TokenKind::Word(Word::Ident(..))
+            TokenKind::Word(WordKind::Ident(..))
             | tok!("void")
             | tok!("yield")
             | tok!("null")
