@@ -156,6 +156,9 @@ macro_rules! tok {
     ("let") => {
         crate::token::TokenKind::Word(crate::token::WordKind::Keyword(crate::token::Keyword::Let))
     };
+    ("var") => {
+        crate::token::TokenKind::Word(crate::token::WordKind::Keyword(crate::token::Keyword::Var))
+    };
     ("await") => {
         crate::token::TokenKind::Word(crate::token::WordKind::Keyword(
             crate::token::Keyword::Await,

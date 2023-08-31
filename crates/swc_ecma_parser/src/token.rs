@@ -765,4 +765,5 @@ known_ident!(
     From => "from",
     Of => "of",
     Type => "type",
+    Global => "global",
 );
