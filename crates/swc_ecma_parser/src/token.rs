@@ -775,4 +775,13 @@ known_ident!(
     Enum => "enum",
     Is => "is",
     Infer => "infer",
+    Symbol => "symbol",
+    Undefined => "undefined",
+    Interface => "interface",
+    Implements => "implements",
+    Asserts => "asserts",
+    Require => "require",
+    Get => "get",
+    Set => "set",
+    Any => "any",
 );
