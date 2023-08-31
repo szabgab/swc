@@ -23,7 +23,13 @@ pub enum WordKind {
     True,
     False,
 
-    Ident,
+    Ident(IdentKind),
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub enum IdentKind {
+    Known(KnownIdent),
+    Other,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
