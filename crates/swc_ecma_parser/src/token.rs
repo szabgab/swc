@@ -730,10 +730,19 @@ macro_rules! known_ident {
     (
         $(
             $name:ident => $value:literal,
-        ),*
-    ) => {};
+        )*
+    ) => {
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[non_exhaustive]
+        pub enum KnownIdent {
+            $(
+                $name
+            ),*
+        }
+    };
 }
 
 known_ident!(
     As => "as",
+    Async => "async",
 );
