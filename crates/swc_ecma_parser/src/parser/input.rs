@@ -64,7 +64,7 @@ pub struct TokensInput {
 
 impl TokensInput {
     pub fn new(tokens: Vec<TokenAndSpan>, ctx: Context, syntax: Syntax, target: EsVersion) -> Self {
-        let start_pos = tokens.first().map(|t| t.span_lo).unwrap_or(BytePos(0));
+        let start_pos = tokens.first().map(|t| t.span.0).unwrap_or(BytePos(0));
 
         TokensInput {
             iter: tokens.into_iter(),
@@ -189,7 +189,7 @@ impl<I: Tokens> Iterator for Capturing<I> {
 
                 // remove tokens that could change due to backtracing
                 while let Some(last) = v.last() {
-                    if last.span_lo >= ts.span_lo {
+                    if last.span.0 >= ts.span.0 {
                         v.pop();
                     } else {
                         break;
@@ -268,7 +268,7 @@ impl<I: Tokens> Tokens for Capturing<I> {
 pub(super) struct Buffer<I: Tokens> {
     iter: I,
     /// Span of the previous token.
-    prev_span: Span,
+    prev_span: SmallSpan,
     cur: Option<TokenAndSpan>,
     /// Peeked token
     next: Option<TokenAndSpan>,
@@ -301,8 +301,7 @@ impl<I: Tokens> Buffer<I> {
         let span = self.prev_span;
 
         self.cur = Some(TokenAndSpan {
-            span_lo: span.lo,
-            span_hi: span.hi,
+            span,
             token,
             had_line_break: false,
         });
