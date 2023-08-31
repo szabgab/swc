@@ -784,4 +784,10 @@ known_ident!(
     Get => "get",
     Set => "set",
     Any => "any",
+    Intrinsic => "intrinsic",
+    Unknown => "unknown",
+    String => "string",
+    Object => "object",
+    Number => "number",
+    Never => "never",
 );
