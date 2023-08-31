@@ -746,6 +746,7 @@ macro_rules! known_ident {
             ),*
         }
 
+        #[allow(unused)]
         macro_rules! known_ident_token {
             $(
                 ($value) => {
