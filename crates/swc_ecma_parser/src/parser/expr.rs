@@ -135,7 +135,9 @@ impl<I: Tokens> Parser<I> {
         }
 
         self.state.potential_arrow_start = match cur!(self, true)? {
-            TokenKind::Word(WordKind::Ident) | tok!('(') | tok!("yield") => Some(cur_pos!(self)),
+            TokenKind::Word(WordKind::Ident(..)) | tok!('(') | tok!("yield") => {
+                Some(cur_pos!(self))
+            }
             _ => None,
         };
 
