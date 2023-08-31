@@ -735,7 +735,7 @@ impl Debug for Token {
 macro_rules! known_ident {
     (
         $(
-            $name:ident => $value:literal,
+            $name:ident => $value:tt,
         )*
     ) => {
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -744,6 +744,16 @@ macro_rules! known_ident {
             $(
                 $name
             ),*
+        }
+
+        macro_rules! known_ident_token {
+            $(
+                ($value) => {
+                    $crate::token::TokenKind::Word($crate::token::WordKind::Ident(
+                        $crate::token::IdentKind::Known($crate::token::KnownIdent::$name),
+                    ))
+                };
+            )*
         }
     };
 }

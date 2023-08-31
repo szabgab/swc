@@ -154,10 +154,10 @@ macro_rules! tok {
     };
 
     ("async") => {
-        crate::token::TokenKind::Word(crate::token::WordKind::Ident(swc_atoms::js_word!("async")))
+        known_ident_token!("async")
     };
     ("as") => {
-        crate::token::TokenKind::Word(crate::token::WordKind::Ident(swc_atoms::js_word!("as")))
+        known_ident_token!("as")
     };
     ("await") => {
         crate::token::TokenKind::Word(crate::token::WordKind::Keyword(
